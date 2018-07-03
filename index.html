@@ -1,0 +1,431 @@
+<html>
+<!--
+
+Salve, vedo che lei e' interessata al codice sorgente della suddetta pagina web eh? Beh faccia pure, intanto ecco a lei un amico.
+
+   .-~~^-.
+ .'  O    \
+(_____,    \
+ `----.     \
+       \     \
+        \     \
+         \     `.             _ _
+          \       ~- _ _ - ~       ~ - .
+           \                              ~-.
+            \                                `.
+             \    /               /       \    \
+              `. |         }     |         }    \
+                `|        /      |        /       \
+                 |       /       |       /          \
+                 |      /`- _ _ _|      /.- ~ ^-.     \
+                 |     /         |     /          `.    \
+                 |     |         |     |             -.   ` . _ _ _ _ _ _
+                 |_____|         |_____|                ~ . _ _ _ _ _ _ _ >
+-->
+
+<head>
+    <title>AlterManager by Nicolo' Lazzeri</title>
+    <link rel="stylesheet" type="text/css" href="index.css" />
+    <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400,500,600,700,900" rel="stylesheet">
+</head>
+
+<body>
+    <div id="toolbar">
+        <button onclick="informazioni()">Informazioni</button>
+        <button onclick="conferma(0)">Cambia Informazioni</button>
+        <button onclick="conferma(1)">Aggiungi Riga</button>
+        <button onclick="conferma(2)">Modifica Riga</button>
+        <button onclick="conferma(3)">Rimuovi Riga</button>
+        <button onclick="firma()">Firma</button>
+        <button onclick="conferma(4)">Importa</button>
+        <button onclick="conferma(5)">Esporta</button>
+        <button onclick="conferma(6)">Azzera</button>
+        <button onclick="calcolo_ore()">Totale Ore</button>
+        <button onclick="stampa()">Stampa</button>
+    </div>
+    <div id="container">
+        <div class="content">
+            <h1 id="azienda">Nome Azienda</h1>
+            <h3>Tirocinante: <span id="tirocinante">Nome Tirocinante</span></h3>
+            <table id="tabella">
+                <tr>
+                    <th>Data</th>
+                    <th>Ingr. Ore</th>
+                    <th>Uscita Ore</th>
+                    <th>Firma</th>
+                    <th>Ingr. Ore</th>
+                    <th>Uscita Ore</th>
+                    <th>Firma</th>
+                </tr>
+                <tr>
+                    <th></th>
+                    <th colspan="3">Mattina</th>
+                    <th colspan="3">Pomeriggio</th>
+                </tr>
+            </table>
+            <table style="width:100%">
+                <tr>
+                    <td colspan="2"></td>
+                </tr>
+                <tr>
+                    <td>
+                        <h3 class="fondo">Il Tutor Aziendale<br><span id="tutor_aziendale">Tutor Aziendale</span></h3>
+                    </td>
+                    <td>
+                        <h3 class="fondo2">Il Tutor Scolastico<br><span id="tutor_scolastico">Tutor Scolastico</span></h3>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <script>
+        if (window.localStorage.length != 0) {
+            for (i = 0; i < ((localStorage.length - 5) / 5); i++)
+                if (localStorage.getItem(localStorage.key(i)) != null)
+                    printInfo(i);
+            document.getElementById("azienda").innerHTML = localStorage.getItem("Azienda");
+            document.getElementById("tirocinante").innerHTML = localStorage.getItem("Tirocinante");
+            document.getElementById("tutor_aziendale").innerHTML = localStorage.getItem("Tutor_aziendale");
+            document.getElementById("tutor_scolastico").innerHTML = localStorage.getItem("Tutor_scolastico");
+            if (localStorage.getItem("Firma") == "true") {
+                document.getElementsByTagName("BUTTON")[5].style.backgroundColor = "#4eff00";
+                document.getElementsByTagName("BUTTON")[5].style.color = "white";
+            } else {
+                document.getElementsByTagName("BUTTON")[5].style.backgroundColor = "#ff0000";
+                document.getElementsByTagName("BUTTON")[5].style.color = "black";
+            }
+        } else {
+            if (informazioni(1) != "esci") {
+                alert("Adesso Dovrai inserire le informazioni di base.")
+                info();
+                if (confirm("Inoltre, vuoi utilizzare la firma automatica?(Ti bastera' cliccare sul bottone 'Firma' per cambiare questa scelta.)"))
+                    localStorage.setItem("Firma", "true");
+                else
+                    localStorage.setItem("Firma", "false");
+                alert("Bene, adesso sei pronto, inizia aggiungendo una riga.\n \n Ricorda! I dati vengono salvati su questo computer e su questo browser, percio' non li puoi utilizzare tramite altri browser / computer. \n \n Se vuoi utilizzare i dati in altri dispositivi/browser ti basterà utilizzare le funzionalita' di esportazione/importazione dei dati.");
+                location.reload();
+            }
+        }
+
+        function aggiungi() {
+            if (((localStorage.length - 5) / 5) == 19) {
+                alert("Attenzione\n\n Al momento non si puo' inserire più di 19 righe in quanto darebbe dei problemi in stampa, rimuovi delle righe dopo aver stampato la pagina attuale.");
+                return 0;
+            }
+            var valori = [];
+            var data = new Date();
+            var attuale = window.localStorage.length;
+            if (attuale != 0) {
+                attuale -= 5;
+                attuale = attuale / 5;
+            }
+
+            var data_input = prompt("Inserire data [GG/MM/AA], altrimenti premere invio per quella di oggi.");
+            if (data_input == "")
+                window.localStorage.setItem(attuale + "_data", data.getDate() + "/" + (data.getMonth() + 1) + "/" + data.getFullYear());
+            else
+                window.localStorage.setItem(attuale + "_data", data_input);
+
+            valori.push(prompt("[Mattina]Ora di Ingresso", "0:00"));
+            valori.push(prompt("[Mattina]Ora di Uscita", "0:00"));
+            valori.push(prompt("[Pomeriggio]Ora di Ingresso", "0:00"));
+            valori.push(prompt("[Pomeriggio]Ora di Uscita", "0:00"));
+
+
+            window.localStorage.setItem(attuale + "_oraIngM", valori[0]);
+            window.localStorage.setItem(attuale + "_oraUscM", valori[1]);
+            window.localStorage.setItem(attuale + "_oraIngP", valori[2]);
+            window.localStorage.setItem(attuale + "_oraUscP", valori[3]);
+
+            printInfo(attuale);
+        };
+
+        function rimuovi() {
+
+            if ((localStorage.length - 5) / 5 == 0) {
+                alert("Non ci sono righe disponibili.");
+                return;
+            }
+
+            var indice;
+
+            do {
+                indice = prompt("Inserisci il numero della riga da eliminare.");
+            } while (indice <= 0 || indice >= (localStorage.length - 5) / 5 + 1);
+
+            localStorage.removeItem(indice - 1 + "_data");
+            localStorage.removeItem(indice - 1 + "_oraIngM");
+            localStorage.removeItem(indice - 1 + "_oraIngP");
+            localStorage.removeItem(indice - 1 + "_oraUscM");
+            localStorage.removeItem(indice - 1 + "_oraUscP");
+            riordina();
+            riordina();
+            location.reload();
+        };
+
+        function printInfo(id) {
+            if (localStorage.getItem("Firma") == "true")
+                document.getElementById("tabella").innerHTML += "<tr title='Riga Numero " + Number(id + 1) + "'><td>" + window.localStorage.getItem(id + "_data") + "</td>" + "<td>" + window.localStorage.getItem(id + "_oraIngM") + "</td>" + "<td>" + window.localStorage.getItem(id + "_oraUscM") + "</td><td class='firma'>" + localStorage.getItem("Tirocinante") + "</td>" + "<td>" + window.localStorage.getItem(id + "_oraIngP") + "</td>" + "<td>" + window.localStorage.getItem(id + "_oraUscP") + "</td><td class='firma'>" + localStorage.getItem("Tirocinante") + "</td>";
+            else
+                document.getElementById("tabella").innerHTML += "<tr title='Riga N°" + Number(id + 1) + "'><td>" + window.localStorage.getItem(id + "_data") + "</td>" + "<td>" + window.localStorage.getItem(id + "_oraIngM") + "</td>" + "<td>" + window.localStorage.getItem(id + "_oraUscM") + "</td><td class='firma'></td>" + "<td>" + window.localStorage.getItem(id + "_oraIngP") + "</td>" + "<td>" + window.localStorage.getItem(id + "_oraUscP") + "</td><td class='firma'></td>";
+        };
+
+        function info() {
+            var azienda = prompt("Inserisci il nome dell'azienda.");
+            var tirocinante = prompt("Inserire cognome e nome del tirocinante.");
+            var tutor_aziendale = prompt("Inserire cognome e nome del tutor aziendale.");
+            var tutor_scolastico = prompt("Inserire cognome e nome del tutor scolastico.");
+
+            window.localStorage.setItem("Azienda", azienda);
+            window.localStorage.setItem("Tirocinante", tirocinante);
+            window.localStorage.setItem("Tutor_aziendale", tutor_aziendale);
+            window.localStorage.setItem("Tutor_scolastico", tutor_scolastico);
+        }
+
+        function modifica() {
+
+            if ((localStorage.length - 5) / 5 == 0) {
+                alert("Non ci sono righe disponibili.");
+                return;
+            }
+
+            var indice;
+            var dati = [];
+
+            do {
+                indice = prompt("Inserisci il numero della riga da modificare.");
+            } while (indice <= 0 || indice >= (localStorage.length - 5) / 5 + 1);
+
+            dati[0] = localStorage.getItem(indice - 1 + "_data");
+            dati[1] = localStorage.getItem(indice - 1 + "_oraIngM");
+            dati[2] = localStorage.getItem(indice - 1 + "_oraUscM");
+            dati[3] = localStorage.getItem(indice - 1 + "_oraIngP");
+            dati[4] = localStorage.getItem(indice - 1 + "_oraUscP");
+
+            dati[0] = prompt("Inserire la nuova data", dati[0]);
+            dati[1] = prompt("Inserire la nuova ora di ingresso[Mattina]", dati[1]);
+            dati[2] = prompt("Inserire la nuova ora di uscita[Mattina]", dati[2]);
+            dati[3] = prompt("Inserire la nuova ora di ingresso[Pomeriggio]", dati[3]);
+            dati[4] = prompt("Inserire la nuova ora di uscita[Pomeriggio]", dati[4]);
+
+            if (dati[0] != null)
+                localStorage.setItem(indice - 1 + "_data", dati[0]);
+            if (dati[1] != null)
+                localStorage.setItem(indice - 1 + "_oraIngM", dati[1]);
+            if (dati[2] != null)
+                localStorage.setItem(indice - 1 + "_oraUscM", dati[2]);
+            if (dati[3] != null)
+                localStorage.setItem(indice - 1 + "_oraIngP", dati[3]);
+            if (dati[4] != null)
+                localStorage.setItem(indice - 1 + "_oraUscP", dati[4]);
+            location.reload();
+        }
+
+        function stampa() {
+            document.getElementById("toolbar").style.opacity = 0;
+            print();
+            document.getElementById("toolbar").style.opacity = 1;
+        }
+
+        function riordina() {
+            var attuali = [];
+            var contatore;
+
+            for (i = 0; i < localStorage.length; i++) {
+                contatore = 0;
+                if (localStorage.key(i) != "Azienda" && localStorage.key(i) != "Firma" && localStorage.key(i) != "Tirocinante" & localStorage.key(i) != "Tutor_aziendale" && localStorage.key(i) != "Tutor_scolastico") {
+                    while (localStorage.key(i).substr(contatore, 1) != "_")
+                        contatore += 1;
+                    attuali.push(localStorage.key(i).substr(0, contatore));
+
+                    i += 4;
+                }
+            }
+            attuali.sort(function(a, b) {
+                return a - b
+            });
+
+            for (i = 0; i < attuali.length; i++) {
+                if (attuali[i] != i.toString()) {
+                    localStorage.setItem(i.toString() + "_data", localStorage.getItem(attuali[i] + "_data"));
+                    localStorage.setItem(i.toString() + "_oraIngM", localStorage.getItem(attuali[i] + "_oraIngM"));
+                    localStorage.setItem(i.toString() + "_oraUscM", localStorage.getItem(attuali[i] + "_oraUscM"));
+                    localStorage.setItem(i.toString() + "_oraIngP", localStorage.getItem(attuali[i] + "_oraIngP"));
+                    localStorage.setItem(i.toString() + "_oraUscP", localStorage.getItem(attuali[i] + "_oraUscP"));
+
+                    localStorage.removeItem(attuali[i] + "_data");
+                    localStorage.removeItem(attuali[i] + "_oraIngM");
+                    localStorage.removeItem(attuali[i] + "_oraUscM");
+                    localStorage.removeItem(attuali[i] + "_oraIngP");
+                    localStorage.removeItem(attuali[i] + "_oraUscP");
+                }
+            }
+        }
+
+        function firma() {
+            if (localStorage.getItem("Firma") == "true") {
+                localStorage.setItem("Firma", false);
+            } else {
+                localStorage.setItem("Firma", true);
+            }
+            location.reload();
+        }
+
+        function conferma(id) {
+            switch (id) {
+                case 0:
+                    if (confirm("Sei sicuro di voler cambiare le informazioni?") == true)
+                        info();
+                    break;
+                case 1:
+                    if (confirm("Sei sicuro di voler aggiungere una riga?") == true)
+                        aggiungi();
+                    break;
+                case 2:
+                    if (confirm("Sei sicuro di voler modificare una riga?") == true)
+                        modifica();
+                    break;
+                case 3:
+                    if (confirm("Sei sicuro di voler rimuovere una riga?") == true)
+                        rimuovi();
+                    break;
+                case 4:
+                    if (confirm("Sei sicuro di voler importare dei dati? \n Attenzione! L'operazione e' permanente.") == true)
+                        importa();
+                    break;
+                case 5:
+                    if (confirm("Sei sicuro di voler esportare dei dati?") == true)
+                        esporta();
+                    break;
+                case 6:
+                    if (confirm("Sei sicuro di voler cancellare tutti i dati?") == true) {
+                        localStorage.clear();
+                        alert("Tutti i dati sono stati eliminati. Adesso puoi chiudere la pagina.");
+                        document.getElementsByTagName("body")[0].style.opacity = 0;
+                        break;
+                    }
+            }
+        }
+
+        function informazioni(first) {
+            if (first == null)
+                alert("AlterManager e' un tool molto semplice per la gestione delle ore di alternanza scuola-lavoro.\n \n Per il mantenimento dei dati viene utilizzato il LocalStorage, percio' tutti i dati inseriti sono disponibili solo accedendo tramite questo dispositivo e con questo browser.\n \n Se si vogliono utilizzare i dati in un altro browser/dispositivo, utilizzare le funzioni importa / esporta. \n \nPosizionare il cursorse sopra ad una riga per sapere il numero di riga. \n \n Sviluppato da Nicolo' Lazzeri. \n # Lazzeking@gmail.com # n.lazzeri@xtalia.it # \n \n Source Code Pro Font by Paul D. Hunt \n Rhesmanisa Font by dharmas \n \n Repository Github: https://github.com/Lazzeking/AlterManager")
+            else {
+                if (confirm("Vuoi davvero utilizzare il tool per le ore di alternanza scuola-lavoro? \n Premi Ok per continuare oppure Annulla per tornare indietro.") == true)
+                    informazioni();
+                else {
+                    window.location.replace("Http://www.lazzeking.altervista.org/");
+                    return "esci";
+                }
+            }
+        }
+
+        function esporta() {
+            var stringa = (JSON.stringify(JSON.stringify(localStorage)));
+            const el = document.createElement("textarea");
+            el.value = JSON.parse(stringa);
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand("copy");
+            document.body.removeChild(el);
+
+            alert("Tutti i dati sono stati copiati nella clipboard, incollarli con CTRL+V su di un file di testo per salvarli.");
+        }
+
+        function importa() {
+            var stringa = JSON.parse(prompt("Inserire la stringa copiata utilizzando il tasto 'esporta'."));
+            localStorage.clear();
+            Object.keys(stringa).forEach(function(k) {
+                localStorage.setItem(k, stringa[k]);
+            });
+            location.reload();
+        }
+
+        function calcolo_ore() {
+            var dati = [];
+            var risultato = [];
+            risultato[0] = risultato[1] = 0;
+            var contatore;
+            var ore = []; // 0|Ore Entrata  1|Minuti Entrata  2|Ore Uscita  3|Minuti Uscita
+            for (i = 0; i < localStorage.length; i++) {
+                if (localStorage.key(i) != "Azienda" && localStorage.key(i) != "Firma" && localStorage.key(i) != "Tirocinante" & localStorage.key(i) != "Tutor_aziendale" && localStorage.key(i) != "Tutor_scolastico") {
+                    dati.push(localStorage.getItem(localStorage.key(i + 1)));
+                    dati.push(localStorage.getItem(localStorage.key(i + 3)));
+                    dati.push(localStorage.getItem(localStorage.key(i + 2)));
+                    dati.push(localStorage.getItem(localStorage.key(i + 4)));
+                    i += 4;
+                }
+            }
+            for (i = 0; i < dati.length; i++) {
+                if (dati[i] != "" && dati[i + 1] != "") {
+                    contatore = 0;
+                    while (dati[i].substr(contatore, 1) != ":")
+                        contatore += 1;
+                    ore.push(dati[i].substr(0, contatore));
+                    ore.push(dati[i].substr(contatore + 1, 2));
+                    contatore = 0;
+                    while (dati[i + 1].substr(contatore, 1) != ":")
+                        contatore += 1;
+                    ore.push(dati[i + 1].substr(0, contatore));
+                    ore.push(dati[i + 1].substr(contatore + 1, 2));
+                    i += 1;
+                }
+            }
+            ore = ore.map(Number);
+            for (i = 0; i < ore.length; i++) {
+                risultato[0] += ore[i + 2] - ore[i];
+                if (ore[i + 1] + ore[i + 3] - 60 == 0) {
+                    risultato[0] += 1;
+                    risultato[1] = 0;
+                } else if (ore[i + 1] + ore[i + 3] - 60 > 0) {
+                    risultato[1] += ore[i + 1] + ore[i + 3] - 60;
+                    risultato[0] += 1;
+                } else {
+                    risultato[1] += ore[i + 1] + ore[i + 3];
+                }
+
+                if (risultato[1] - 60 == 0) {
+                    risultato[1] = 0;
+                    risultato[0] += 1;
+                } else if (risultato[1] - 60 > 0) {
+                    risultato[1] -= 60;
+                    risultato[0] += 1;
+                }
+
+                i += 3;
+            }
+            alert("Totale Ore: " + risultato[0] + ":" + risultato[1]);
+        }
+
+    </script>
+</body>
+<!--                          __
+                            .d$$b
+                          .' TO$;\
+                         /  : TP._;
+                        / _.;  :Tb|
+                       /   /   ;j$j
+                   _.-"       d$$$$
+                 .' ..       d$$$$;
+                /  /P'      d$$$$P. |\
+               /   "      .d$$$P' |\^"l
+             .'           `T$P^"""""  :
+         ._.'      _.'                ;
+      `-.-".-'-' ._.       _.-"    .-"
+    `.-" _____  ._              .-"                Lazzeking @ 2018 @ lazzeking@gmail.com
+   -(.g$$$$$$$b.              .'
+     ""^^T$$$P^)            .(:
+       _/  -"  /.'         /:/;
+    ._.'-'`-'  ")/         /;/;
+ `-.-"..--""   " /         /  ;
+.-" ..--""        -'          :
+..--""--.-"         (\      .-(\
+  ..--""              `-\(\/;`
+    _.                      :
+                            ;`-
+                           :\
+                           ;  
+
+-->
+
+</html>

@@ -39,7 +39,8 @@ Salve, vedo che lei e' interessata al codice sorgente della suddetta pagina web 
         <button onclick="firma()">Firma</button>
         <button onclick="conferma(4)">Importa</button>
         <button onclick="conferma(5)">Esporta</button>
-        <button onclick="conferma(6)">Azzera</button>
+        <button onclick="conferma(7)">Svuota</button>
+        <button onclick="conferma(6)">Azzera Applicazione</button>
         <button onclick="calcolo_ore()">Totale Ore</button>
         <button onclick="stampa()">Stampa</button>
     </div>
@@ -304,6 +305,10 @@ Salve, vedo che lei e' interessata al codice sorgente della suddetta pagina web 
                         document.getElementsByTagName("body")[0].style.opacity = 0;
                         break;
                     }
+                case 7:
+                    if (confirm("Sei sicuro di voler eliminare tutte le righe ?") == true)
+                        svuota();
+                    break;
             }
         }
 
@@ -395,6 +400,22 @@ Salve, vedo che lei e' interessata al codice sorgente della suddetta pagina web 
                 i += 3;
             }
             alert("Totale Ore: " + risultato[0] + ":" + risultato[1]);
+        }
+
+        function svuota() {
+            var info = [];
+            info.push(localStorage.getItem("Azienda"));
+            info.push(localStorage.getItem("Firma"));
+            info.push(localStorage.getItem("Tirocinante"));
+            info.push(localStorage.getItem("Tutor_aziendale"));
+            info.push(localStorage.getItem("Tutor_scolastico"));
+            localStorage.clear();
+            localStorage.setItem("Azienda", info[0]);
+            localStorage.setItem("Firma", info[1]);
+            localStorage.setItem("Tirocinante", info[2]);
+            localStorage.setItem("Tutor_aziendale", info[3]);
+            localStorage.setItem("Tutor_scolastico", info[4]);
+            location.reload();
         }
 
     </script>

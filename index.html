@@ -127,10 +127,10 @@ Salve, vedo che lei e' interessata al codice sorgente della suddetta pagina web 
             else
                 window.localStorage.setItem(attuale + "_data", data_input);
 
-            valori.push(prompt("[Mattina]Ora di Ingresso", "0:00"));
-            valori.push(prompt("[Mattina]Ora di Uscita", "0:00"));
-            valori.push(prompt("[Pomeriggio]Ora di Ingresso", "0:00"));
-            valori.push(prompt("[Pomeriggio]Ora di Uscita", "0:00"));
+            valori.push(prompt("[Mattina]Ora di Ingresso (Formato: 10:00)"));
+            valori.push(prompt("[Mattina]Ora di Uscita (Formato: 10:00)"));
+            valori.push(prompt("[Pomeriggio]Ora di Ingresso (Formato: 10:00)"));
+            valori.push(prompt("[Pomeriggio]Ora di Uscita (Formato: 10:00)"));
 
 
             window.localStorage.setItem(attuale + "_oraIngM", valori[0]);

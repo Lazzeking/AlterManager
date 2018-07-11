@@ -1,6 +1,8 @@
 # AlterManager
 by Nicolo' Lazzeri # lazzeking@gmail.com # n.lazzeri@xtalia.it #
 
+Applicativo disponibile su : Lazzeking.altervista.org/alternanza
+
 Semplice Web Application per la gestione delle ore di alternanza scuola-lavoro.
 
 ## Storia di AlterManager

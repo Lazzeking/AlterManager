@@ -32,7 +32,7 @@ body {
 }
 
 .content h3 {
-    padding-top: 60px;
+    padding-top: 40px;
     padding-left: 40px;
 }
 
@@ -125,4 +125,12 @@ body {
 #tabella tr:nth-child(2) th {
     border-left: none;
     border-right: none;
+}
+
+.tot_ore {
+    font-weight: bold;
+}
+
+#tot_ore {
+    font-weight: normal;
 }
